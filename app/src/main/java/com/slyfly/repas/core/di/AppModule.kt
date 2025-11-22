@@ -2,6 +2,7 @@ package com.slyfly.repas.core.di
 
 
 
+import SignInRepositoryImpl
 import org.koin.dsl.module
 
 
@@ -15,6 +16,9 @@ import com.slyfly.repas.logic.viewmodel.SignUpViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import com.slyfly.repas.core.datastore.SessionManager
+import com.slyfly.repas.domain.repository.SignInRepository
+import com.slyfly.repas.domain.usecase.SignInUserUseCase
+import com.slyfly.repas.logic.viewmodel.SignInViewModel
 import org.koin.dsl.module
 import retrofit2.Retrofit
 
@@ -28,7 +32,7 @@ val appModule = module {
 
     // Session
    single { SessionManager(androidContext()) }
-
+//INSCRIPTION
     // Repositories
     single<UserRepository> { UserRepositoryImpl(get(), get()) }
 
@@ -37,5 +41,11 @@ val appModule = module {
 
     // ViewModels
     viewModel { SignUpViewModel(get()) }
+
+    //CONNEXION
+    single<SignInRepository>{SignInRepositoryImpl(get(),get())}
+    single { SignInUserUseCase(get ()) }
+    viewModel { SignInViewModel(get()) }
+
 }
 

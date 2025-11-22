@@ -11,7 +11,7 @@ interface UserRepository {
         postalCode: String,
         email: String,
         password: String,
-        password1: String
+
     ): Result<User>
-    // (tu ajouteras login() plus tard)
+
 }

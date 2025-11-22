@@ -12,11 +12,14 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.slyfly.repas.ui.appbar.AppBarScreen
+import com.slyfly.repas.ui.screen.HomeScreen
+import com.slyfly.repas.ui.screen.SignInScreen
 import com.slyfly.repas.ui.screen.SignUpScreen
 
 object Routes {
     const val SignUp = "signup"
     const val Home = "home"
+    const val SignIn="signin"
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -35,7 +38,10 @@ fun RootNavHost(navController: NavHostController) {
 
         NavHost(
             navController = navController,
-            startDestination = Routes.SignUp,
+            startDestination =
+
+
+                Routes.SignUp,
             //pour appbar toujours visible 3
             modifier = Modifier.padding(innerPadding)
         ) {
@@ -43,15 +49,36 @@ fun RootNavHost(navController: NavHostController) {
             composable(Routes.SignUp) {
                 SignUpScreen(
                     onRegistered = {
-                        navController.navigate(Routes.Home) {
+                        navController.navigate(Routes.SignIn) {
                             popUpTo(Routes.SignUp) { inclusive = true }
+                        }
+                    },
+                            onGoToSignIn={
+                                navController.navigate(Routes.SignIn){
+                                   popUpTo(Routes.SignUp){inclusive=true}
+                                }
+                    }
+                )
+            }
+            composable(Routes.SignIn){
+                SignInScreen(
+                    onValidate ={
+                        navController.navigate(Routes.Home){
+                            popUpTo(Routes.SignIn){inclusive = true}
+                        }
+                    },
+                    onGoToSignUp ={
+                        navController.navigate(Routes.SignUp){
+                            popUpTo(Routes.SignIn){inclusive = true}
                         }
                     }
                 )
             }
 
             composable(Routes.Home) {
-                // TODO
+               HomeScreen(
+
+               )
             }
         }
     }
