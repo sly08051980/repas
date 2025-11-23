@@ -1,5 +1,6 @@
 package com.slyfly.repas.ui.nav
 
+import HomeScreen
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -11,74 +12,66 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.slyfly.repas.core.datastore.SessionManager
 import com.slyfly.repas.ui.appbar.AppBarScreen
-import com.slyfly.repas.ui.screen.HomeScreen
+
 import com.slyfly.repas.ui.screen.SignInScreen
 import com.slyfly.repas.ui.screen.SignUpScreen
+import org.koin.androidx.compose.get
+
+
 
 object Routes {
     const val SignUp = "signup"
     const val Home = "home"
-    const val SignIn="signin"
+    const val SignIn = "signin"
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RootNavHost(navController: NavHostController) {
 
-    //pour appbar toujours visible 1
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
     Scaffold(
         topBar = { AppBarScreen() },
         containerColor = Color.Transparent,
-        //pour appbar toujours visible 2
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
     ) { innerPadding ->
 
         NavHost(
             navController = navController,
-            startDestination =
-
-
-                Routes.SignUp,
-            //pour appbar toujours visible 3
+            startDestination = Routes.SignUp,
             modifier = Modifier.padding(innerPadding)
         ) {
 
             composable(Routes.SignUp) {
                 SignUpScreen(
                     onRegistered = {
-                        navController.navigate(Routes.SignIn) {
-                            popUpTo(Routes.SignUp) { inclusive = true }
-                        }
+                        navController.navigate(Routes.SignIn)
                     },
-                            onGoToSignIn={
-                                navController.navigate(Routes.SignIn){
-                                   popUpTo(Routes.SignUp){inclusive=true}
-                                }
+                    onGoToSignIn = {
+                        navController.navigate(Routes.SignIn)
                     }
                 )
             }
-            composable(Routes.SignIn){
+
+            composable(Routes.SignIn) {
                 SignInScreen(
-                    onValidate ={
-                        navController.navigate(Routes.Home){
-                            popUpTo(Routes.SignIn){inclusive = true}
+                    onValidate = {
+                        navController.navigate(Routes.Home) {
+                            popUpTo(0) { inclusive = true }
                         }
                     },
-                    onGoToSignUp ={
-                        navController.navigate(Routes.SignUp){
-                            popUpTo(Routes.SignIn){inclusive = true}
-                        }
+                    onGoToSignUp = {
+                        navController.navigate(Routes.SignUp)
                     }
                 )
             }
 
             composable(Routes.Home) {
-               HomeScreen(
-
-               )
+                val session = get<SessionManager>()
+                HomeScreen(sessionManager = session)
             }
         }
     }

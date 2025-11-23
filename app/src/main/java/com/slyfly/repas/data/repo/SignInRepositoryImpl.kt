@@ -16,7 +16,7 @@ class SignInRepositoryImpl(
 
         val res = api.signIn(SignInRequest(email, password))
 
-        if (res.success && res.userId != null && res.token != null) {
+        if (res.success && res.user != null && res.token != null) {
 
 
             session.saveToken(res.token)
