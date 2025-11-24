@@ -1,3 +1,6 @@
+package com.slyfly.repas.ui.screen
+
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 
 import androidx.compose.runtime.Composable
@@ -6,24 +9,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.slyfly.repas.R
-import com.slyfly.repas.ui.theme.dancingScript
 
 
 @Composable
+
 fun HomeScreen() {
 
     Box(
@@ -33,12 +33,12 @@ fun HomeScreen() {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Box(){
+            Box(modifier = Modifier.fillMaxSize()){
 
 
 
 
-                Canvas(modifier = Modifier.size(110.dp).align(Alignment.Center)) {
+                Canvas(modifier = Modifier.size(150.dp).align(Alignment.Center)) {
                     drawArc(
                         color = Color.White,
                         startAngle = -60f,
@@ -60,11 +60,10 @@ fun HomeScreen() {
                         useCenter = false,
                         style = Stroke(2.dp.toPx(), cap = StrokeCap.Round)
                     )
-
                 }
 
 
-                Canvas(modifier = Modifier.size(90.dp).align(Alignment.Center)) {
+                Canvas(modifier = Modifier.size(130.dp).align(Alignment.Center)) {
                     drawArc(
                         color = Color.White,
                         startAngle = 0f,
@@ -73,48 +72,23 @@ fun HomeScreen() {
                         style = Stroke(0.2.dp.toPx(), cap = StrokeCap.Round)
                     )
                 }
-Canvas(modifier=Modifier.size(130.dp).align(Alignment.Center)) {
 
-    drawArc(
-        color = Color.White,
-        startAngle = -70f,
-        sweepAngle = 80f,
-        useCenter = false,
-        style = Stroke(1f, cap = StrokeCap.Round)
-    )
-
-
-        drawLine(
-            color = Color.White,
-            start = Offset(size.width / 2 +60f, -200f),
-            end = Offset(size.width / 2+60f, 10f),
-            strokeWidth = 1f
-        )
-    drawLine(
-        color = Color.White,
-        start = Offset(size.width +4f, size.width / 2 +40f ),
-        end = Offset(size.width + 100f, size.width / 2 + 40f),
-        strokeWidth = 1f
-    )
-
-
-}
 
                 Image(
                     painter = painterResource(R.drawable.homecodebarre),
                     contentDescription = "code barre",
-                    modifier = Modifier.size(70.dp).align(Alignment.Center)
+                    modifier = Modifier.size(110.dp)
                 )
 
             }
-
             Text(
-                text = "SCAN PRODUIT",
+                text = "SCAN PRODUIT 132",
                 color = Color.White,
                 fontSize = 16.sp,
-                fontFamily = dancingScript,
                 modifier = Modifier.padding(top = 8.dp)
             )
         }
     }
 }
+
+

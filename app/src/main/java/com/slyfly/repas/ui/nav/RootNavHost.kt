@@ -1,6 +1,7 @@
 package com.slyfly.repas.ui.nav
 
 import HomeScreen
+import android.window.SplashScreen
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -14,6 +15,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.slyfly.repas.core.datastore.SessionManager
 import com.slyfly.repas.ui.appbar.AppBarScreen
+import com.slyfly.repas.ui.screen.AppSplashScreen
 
 import com.slyfly.repas.ui.screen.SignInScreen
 import com.slyfly.repas.ui.screen.SignUpScreen
@@ -25,6 +27,7 @@ object Routes {
     const val SignUp = "signup"
     const val Home = "home"
     const val SignIn = "signin"
+    const val SplashScreen="splashcreen"
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -41,7 +44,7 @@ fun RootNavHost(navController: NavHostController) {
 
         NavHost(
             navController = navController,
-            startDestination = Routes.SignUp,
+            startDestination = Routes.SplashScreen,
             modifier = Modifier.padding(innerPadding)
         ) {
 
@@ -70,9 +73,20 @@ fun RootNavHost(navController: NavHostController) {
             }
 
             composable(Routes.Home) {
-                val session = get<SessionManager>()
-                HomeScreen(sessionManager = session)
+
+                HomeScreen()
+            }
+            composable(Routes.SplashScreen){
+               AppSplashScreen(
+                   onValidate={navController.navigate(Routes.Home){
+                       popUpTo(0) { inclusive = true }
+                   }},
+                   onFailure={navController.navigate(Routes.SignUp){
+                       popUpTo(0) { inclusive = true }
+                   }}
+               )
             }
         }
     }
 }
+
