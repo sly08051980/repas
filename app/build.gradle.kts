@@ -57,6 +57,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+//code barre google
 
     implementation ("com.google.android.gms:play-services-code-scanner:16.1.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.3")

@@ -10,6 +10,10 @@ val Purple40 = Color(0xFF6650a4)
 val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
-val StartBlue=Color(0xFFDFE5EB)
-val MiddleBlue=Color(0xFF375A79)
+val AppBarStartBlue=Color(0xFFDFE5EB)
+val AppBarMiddleBlue=Color(0xFF375A79)
+val AppBarEndBlue=Color(0xFF002A3F)
+
+val StartBlue=Color(0xFF375A79)
+val MiddleBlue=Color(0xFF194A75)
 val EndBlue=Color(0xFF002A3F)

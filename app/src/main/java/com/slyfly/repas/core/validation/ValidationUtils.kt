@@ -32,3 +32,14 @@ fun isValidPostalCode(code: String): Boolean {
     val regex = Regex("^[0-9]{5}$")
     return regex.matches(code)
 }
+
+fun allergenSorted(allergenCleaned: String): String {
+    return allergenCleaned
+        .replace(Regex("en:[^,;]*([,;]|$)"), "")
+        .replace("(fr)","")
+        .split(",", ";")
+        .map { it.trim() }
+        .filter { it.isNotBlank() }
+        .toSet()
+        .joinToString(", ")
+}

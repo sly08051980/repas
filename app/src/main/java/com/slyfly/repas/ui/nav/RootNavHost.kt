@@ -1,7 +1,6 @@
 package com.slyfly.repas.ui.nav
 
-import HomeScreen
-import android.window.SplashScreen
+
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -10,17 +9,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.slyfly.repas.core.datastore.SessionManager
+import com.slyfly.repas.domain.usecase.ScannerUseCase
+import com.slyfly.repas.logic.viewmodel.ScannerViewModel
 import com.slyfly.repas.ui.appbar.AppBarScreen
 import com.slyfly.repas.ui.screen.AppSplashScreen
+import com.slyfly.repas.ui.screen.HomeScreen
+
+import com.slyfly.repas.ui.screen.ScannerProductScreen
 
 import com.slyfly.repas.ui.screen.SignInScreen
 import com.slyfly.repas.ui.screen.SignUpScreen
-import org.koin.androidx.compose.get
-
+import com.slyfly.repas.ui.screen.Test
+import org.koin.androidx.compose.getViewModel
 
 
 object Routes {
@@ -28,6 +33,9 @@ object Routes {
     const val Home = "home"
     const val SignIn = "signin"
     const val SplashScreen="splashcreen"
+    const val ScannerProductScreen="scannerproductscreen"
+    const val Test="test"
+
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -35,6 +43,7 @@ object Routes {
 fun RootNavHost(navController: NavHostController) {
 
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+    val scannerViewModel: ScannerViewModel = getViewModel()
 
     Scaffold(
         topBar = { AppBarScreen() },
@@ -74,7 +83,9 @@ fun RootNavHost(navController: NavHostController) {
 
             composable(Routes.Home) {
 
-                HomeScreen()
+
+                HomeScreen(viewModel = scannerViewModel,navController)
+
             }
             composable(Routes.SplashScreen){
                AppSplashScreen(
@@ -85,6 +96,15 @@ fun RootNavHost(navController: NavHostController) {
                        popUpTo(0) { inclusive = true }
                    }}
                )
+            }
+            composable(Routes.ScannerProductScreen){
+
+                ScannerProductScreen(viewModel=scannerViewModel)
+            }
+            composable(Routes.Test){
+                Test(
+
+                )
             }
         }
     }

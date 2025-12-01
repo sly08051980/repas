@@ -1,59 +1,49 @@
 package com.slyfly.repas.ui.screen
 
-
-import androidx.compose.foundation.layout.fillMaxSize
-
-import androidx.compose.runtime.Composable
-
-import androidx.compose.ui.Modifier
+import android.annotation.SuppressLint
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.VectorConverter
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Text
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.platform.LocalContext
-
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import com.slyfly.repas.R
-import com.slyfly.repas.core.barcode.BarCodeScanner
-import com.slyfly.repas.logic.viewmodel.ScannerViewModel
-import com.slyfly.repas.ui.nav.Routes
 import com.slyfly.repas.ui.theme.dancingScript
 import com.slyfly.repas.ui.theme.functionGradientBlueToWhite
+import com.slyfly.repas.ui.theme.gradientCurtainBottom
+import com.slyfly.repas.ui.theme.gradientCurtainTop
 
 
-
+@SuppressLint("Range")
 @Composable
-fun HomeScreen(
-    viewModel: ScannerViewModel,
-    navController:NavController
-) {
-    val context = LocalContext.current
-    val state by viewModel.observeUiState().collectAsState()
-    LaunchedEffect(state.navigateToDetail) {
-        if (state.navigateToDetail) {
-            navController.navigate(Routes.ScannerProductScreen)
-            viewModel.resetNavigation()
-        }
+fun Test() {
+
+
+    val height = remember { Animatable(400.dp, Dp.VectorConverter) }
+
+    LaunchedEffect(Unit) {
+        height.animateTo(
+            targetValue = 0.dp,
+            animationSpec = tween(
+                durationMillis = 4000,
+                easing = LinearEasing
+            )
+        )
     }
 
     Box(
@@ -70,16 +60,9 @@ fun HomeScreen(
             verticalArrangement = Arrangement.Center
         ) {
 
-            Box(contentAlignment = Alignment.Center,modifier=Modifier
+            Box(contentAlignment = Alignment.Center) {
 
-                ) {
-
-                Canvas(modifier = Modifier.size(110.dp).clip(CircleShape).clickable { BarCodeScanner(context).startScanner { scannedCode ->
-                    if (scannedCode != null) {
-                        viewModel.scanProduct(scannedCode)
-
-                    }
-                } }) {
+                Canvas(modifier = Modifier.size(110.dp)) {
                     drawArc(
                         color = Color.White,
                         startAngle = -60f,
@@ -153,6 +136,22 @@ fun HomeScreen(
         }
 
 
-        HomeAnimateScreen()
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(height.value)
+                .align(Alignment.TopCenter)
+                .background(gradientCurtainTop())
+        ) {}
+
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(height.value)
+                .align(Alignment.BottomCenter)
+                .background(gradientCurtainBottom())
+        ) {}
     }
 }
+

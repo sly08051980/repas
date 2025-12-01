@@ -23,16 +23,17 @@ import com.slyfly.repas.domain.usecase.SignInUserUseCase
 import com.slyfly.repas.domain.usecase.TokenUserUseCase
 import com.slyfly.repas.logic.viewmodel.SignInViewModel
 import com.slyfly.repas.logic.viewmodel.TokenAutoLogViewModel
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import retrofit2.Retrofit
 
 val appModule = module {
 
     // Retrofit
-    single<Retrofit> {
+    single<Retrofit>(qualifier = named("Repas")) {
         NetworkModule.provideRetrofit(Constants.BASE_URL)
     }
-    single<UserService> { get<Retrofit>().create(UserService::class.java) }
+    single<UserService> { get<Retrofit>(named("Repas")).create(UserService::class.java) }
 
     // Session
    single { SessionManager(androidContext()) }
