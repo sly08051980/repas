@@ -6,6 +6,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 
 import com.slyfly.repas.core.di.appModule
+import com.slyfly.repas.core.di.scanModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
@@ -16,7 +17,7 @@ class RepasApp : Application() {
         startKoin {
 
             androidContext(this@RepasApp)
-            modules(appModule)
+            modules(appModule,scanModule)
         }
     }
 }

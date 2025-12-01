@@ -1,4 +1,4 @@
-package com.slyfly.repas.data.dto
+package com.slyfly.repas.data.dto.register
 
 data class RegisterRequest(
     val firstName: String,

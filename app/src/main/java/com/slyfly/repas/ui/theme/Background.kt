@@ -3,19 +3,36 @@ package com.slyfly.repas.ui.theme
 import androidx.compose.ui.graphics.Brush
 
 fun functionGradientBlueToWhite(): Brush {
-    val gradientBlueToWhite= Brush.verticalGradient(
+    return Brush.verticalGradient(
         listOf(EndBlue, MiddleBlue, StartBlue),
         startY = 0.0f,
-        endY = 5000.0f
+        endY = 2500.0f
     )
-    return gradientBlueToWhite
+
 }
 
 fun functionAppBarGradientWhiteToBlue(): Brush {
-    val gradient= Brush.verticalGradient(
-        listOf(StartBlue, MiddleBlue, EndBlue),
+    return Brush.verticalGradient(
+        listOf(AppBarStartBlue, AppBarMiddleBlue, AppBarEndBlue),
         startY = 0.0f,
         endY = 300.0f
     )
-    return gradient
+
+}
+
+fun gradientCurtainTop(): Brush {
+    return Brush.verticalGradient(
+        colors = listOf(EndBlue, MiddleBlue),
+        startY = 0f,
+        endY = 1250f
+    )
+}
+
+fun gradientCurtainBottom(): Brush {
+    return Brush.verticalGradient(
+        colors = listOf(MiddleBlue, StartBlue),
+        startY = 1250f,
+        endY = 3000f
+
+    )
 }

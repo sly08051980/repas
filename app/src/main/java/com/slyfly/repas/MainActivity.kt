@@ -25,11 +25,13 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             RepasTheme() {
+
                 Box(
                     modifier=Modifier.fillMaxSize()
                         .background(functionGradientBlueToWhite())
 
                 ){
+
                     val navController = rememberNavController()
                     RootNavHost(navController = navController)
                 }

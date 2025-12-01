@@ -1,5 +1,6 @@
 package com.slyfly.repas.ui.screen
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.ScrollableState
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.runtime.*
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -20,6 +22,7 @@ import com.slyfly.repas.logic.state.SignUpUiState
 import com.slyfly.repas.logic.interfaces.SignUpIntent
 import com.slyfly.repas.logic.viewmodel.SignUpViewModel
 import com.slyfly.repas.ui.components.SignUpField
+import com.slyfly.repas.ui.nav.Routes
 import com.slyfly.repas.ui.theme.dancingScript
 import org.koin.androidx.compose.koinViewModel
 
@@ -27,6 +30,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun SignUpScreen(
     onRegistered: () -> Unit,
+    onGoToSignIn: () -> Unit,
     viewModel: SignUpViewModel = koinViewModel()
 ) {
     val state by viewModel.observeUiState().collectAsState()
@@ -45,7 +49,8 @@ fun SignUpScreen(
         onEmail = { viewModel.onIntent(SignUpIntent.ChangeEmail(it)) },
         onPassword = { viewModel.onIntent(SignUpIntent.ChangePassword(it)) },
         onConfirmPassword = { viewModel.onIntent(SignUpIntent.ChangeConfirmPassword(it)) },
-        onSubmit = { viewModel.onIntent(SignUpIntent.Submit) }
+        onSubmit = { viewModel.onIntent(SignUpIntent.Submit) } ,
+        onGoToSignIn = onGoToSignIn
     )
 }
 @Composable
@@ -58,14 +63,20 @@ fun SignUpContent(
     onEmail: (String) -> Unit,
     onPassword: (String) -> Unit,
     onConfirmPassword: (String) -> Unit,
-    onSubmit: () -> Unit
+    onSubmit: () -> Unit,
+    onGoToSignIn: () -> Unit
 ) {
     // ⭐ Liste pour alléger la vue
     val fields = listOf(
         SignUpField("Prénom", state.firstName, onFirstName),
         SignUpField("Nom", state.lastName, onLastName),
         SignUpField("Ville", state.city, onCity),
-        SignUpField("Code Postal", state.postalCode, onPostalCode),
+        SignUpField(label = "Code Postal", value = state.postalCode, onChange = { newValue ->
+                if (newValue.length <= 5 && newValue.all { it.isDigit() }) {
+                    onPostalCode(newValue)
+                }
+            }
+        ),
         SignUpField("Email", state.email, onEmail),
         SignUpField("Mot de passe", state.password, onPassword, isPassword = true),
         SignUpField("Confirmer le mot de passe", state.confirmPassword, onConfirmPassword, isPassword = true)
@@ -103,7 +114,7 @@ fun SignUpContent(
             )
             Spacer(Modifier.height(10.dp))
         }
-
+Row {
         Button(
             onClick = onSubmit,
             enabled = !state.isLoading
@@ -115,10 +126,23 @@ fun SignUpContent(
                 )
             else Text("Créer mon compte")
         }
-
+}
         state.error?.let {
             Spacer(Modifier.height(8.dp))
             Text(it, color = MaterialTheme.colorScheme.error)
         }
+        Row(modifier=Modifier.fillMaxWidth()
+            .padding(0.dp,30.dp,0.dp,0.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center){
+
+            Text(text="Déjà inscrit ? cliquez ici",
+                fontFamily = dancingScript,
+                fontWeight = FontWeight.Bold,
+                fontSize = 30.sp,
+                modifier=Modifier.clickable { onGoToSignIn() }
+            )
+        }
     }
+
 }

@@ -3,7 +3,7 @@ package com.slyfly.repas.data.repo
 
 
 import com.slyfly.repas.core.datastore.SessionManager
-import com.slyfly.repas.data.dto.RegisterRequest
+import com.slyfly.repas.data.dto.register.RegisterRequest
 import com.slyfly.repas.data.service.UserService
 import com.slyfly.repas.domain.model.User
 import com.slyfly.repas.domain.repository.UserRepository
@@ -19,8 +19,7 @@ class UserRepositoryImpl(
         city: String,
         postalCode: String,
         email: String,
-        password: String,
-        password1: String
+        password: String
     ): Result<User> = try {
         val res = api.register(RegisterRequest(firstName, lastName,city, postalCode, email, password))
         if (res.success && res.userId != null) {

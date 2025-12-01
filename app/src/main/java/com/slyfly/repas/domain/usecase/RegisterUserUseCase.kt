@@ -7,9 +7,19 @@ class RegisterUserUseCase(private val repo: UserRepository) {
     suspend operator fun invoke(
         firstName: String,
         lastName: String,
-        city:String,
-        postalCode:String,
+        city: String,
+        postalCode: String,
         email: String,
         password: String
-    ): Result<User> = repo.register(firstName, lastName,city,postalCode, email, city,password)
+    ): Result<User> {
+        return repo.register(
+            firstName = firstName,
+            lastName = lastName,
+            city = city,
+            postalCode = postalCode,
+            email = email,
+            password = password
+        )
+    }
 }
+
