@@ -33,6 +33,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import coil.compose.AsyncImagePainter.State.Empty.painter
 import com.slyfly.repas.R
 import com.slyfly.repas.core.barcode.BarCodeScanner
 import com.slyfly.repas.logic.viewmodel.ScannerViewModel
@@ -128,6 +129,7 @@ fun HomeScreen(
                         end = Offset(size.width / 2 + 60f, 10f),
                         strokeWidth = 1f
                     )
+
                     drawLine(
                         color = Color.White,
                         start = Offset(size.width + 4f, size.width / 2 + 40f),
@@ -151,6 +153,15 @@ fun HomeScreen(
                 modifier = Modifier.padding(top = 8.dp)
             )
         }
+        Box(
+         modifier = Modifier.fillMaxSize().padding(bottom = 350.dp, start = 40.dp), contentAlignment = Alignment.Center
+        ){
+            Image(painter= painterResource(R.drawable.hometicketdecaisse),
+                contentDescription = "ticket de caisse",
+                modifier=Modifier.size(120.dp)
+                    .clickable(onClick = {/*TODO*/}))
+        }
+
 
 
         HomeAnimateScreen()

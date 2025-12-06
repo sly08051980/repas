@@ -26,7 +26,7 @@ fun AppSplashScreen(
 
     LaunchedEffect(true) {
 
-        delay(3000)
+        delay(1000)
         val token = sessionManager.getTokenOnce()
 
         if (token.isNullOrBlank()) {

@@ -1,15 +1,24 @@
 package com.slyfly.repas.ui.screen
 
+import android.graphics.drawable.Icon
+import android.widget.ImageView
+import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -17,7 +26,13 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -27,20 +42,30 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
 import coil.compose.AsyncImage
 import com.slyfly.repas.R
+import com.slyfly.repas.domain.model.ScannerProduct
 import com.slyfly.repas.logic.viewmodel.ScannerViewModel
 import com.slyfly.repas.ui.theme.dancingScript
 import org.koin.androidx.compose.koinViewModel
+
+
+
 
 @Composable
 
@@ -49,9 +74,7 @@ fun ScannerProductScreen(
 ){
 
     val state by viewModel.observeUiState().collectAsState()
- //   LaunchedEffect(state.image_front_url) {
- //       println("URL Image reçue : ${state.image_front_url}")
- //   }
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -81,8 +104,8 @@ fun ScannerProductScreen(
                         model = state.image_front_url,
                         contentDescription = null,
                         modifier = Modifier
-                            .width(200.dp)
-                            .height(200.dp)
+                            .size(200.dp)
+
                     )
                     when (nutriscore) {
                         "a" -> Image(painter = painterResource(R.drawable.nutriscorea), null, nutriscoreSize)
@@ -110,9 +133,50 @@ fun ScannerProductScreen(
                     textAlign = TextAlign.Center,
                     style = TextStyle(lineHeight = 40.sp))
 
-           Text("${state.categories_old.takeIf { it.isNotBlank() }?.let {"Catégorie : $it"  }}")
+                ScannerProductAnimateScreen()
+                {expanded ->
+                    Row( modifier = Modifier.fillMaxWidth()) {
 
-                Text("${state.countries_imported.takeIf { it.isNotBlank() }?.let { "Origine : $it" }}")
+
+                        Text(text = state.categories_old.takeIf { it.isNotBlank() }?.let { value ->
+                                        buildAnnotatedString { withStyle(style = SpanStyle(fontFamily = dancingScript, fontSize = 20.sp)) { //pour mettre categorie dans une autre police
+                                                append("Catégorie : ")
+                                            }
+                                            append(value)
+                                        }
+                                    } ?: buildAnnotatedString { append("") },
+                            maxLines = if (expanded) Int.MAX_VALUE else 1,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier
+                                .padding(8.dp)
+                                .weight(1f),
+                            color = Color.White
+                        )
+                        if (!expanded){
+                            Icon(
+                                imageVector = Icons.Filled.ArrowDropDown,
+                                contentDescription = "arrowDropDown",
+                                modifier=Modifier.size(25.dp)
+                                    . align(alignment = Alignment.CenterVertically)
+
+                            )
+                        }else{
+                            Icon(
+                                imageVector = Icons.Filled.ArrowDropUp,
+                                contentDescription = "arrowDropUp",
+                                modifier=Modifier.size(25.dp)
+                                    .align(alignment = Alignment.Bottom)
+
+                            )
+                        }
+                }
+                }
+
+
+
+                state.countries_imported.takeIf { it.isNotBlank() }?.let { value ->
+                        Text(text = "Origine : $value", fontFamily = dancingScript, fontSize = 20.sp)
+                    }
             }
 
             Spacer(Modifier.height(16.dp))
@@ -120,17 +184,54 @@ fun ScannerProductScreen(
 
 
         val data = listOfNotNull(
-            state.allergens_from_user.takeIf { it.isNotBlank() }?.let { "Allergène (déclaré): $it" to Color.Red },
-            state.allergens_from_ingredients.takeIf { it.isNotBlank() }?.let { "Allergène (ingrédients): $it" to Color.Red },
-            state.traces_from_ingredients.takeIf { it.isNotBlank() }?.let { "Trace Allergène: $it" to Color.Red },
-            state.ingredients_text_fr.takeIf { it.isNotBlank() }?.let { "Ingrédients: $it" to Color.White },
-            state.preparation_fr.takeIf{it.isNotBlank()}?.let{ "Préparation : $it" to Color.White},
-            state.conservation_conditions_fr.takeIf{it.isNotBlank()}.let{"Conservation : $it" to Color.White}
+            state.allergens_from_user.takeIf { it.isNotBlank() }?.let {Triple("Allergène (déclaré): $it", Color.Red,false)  },
+            state.allergens_from_ingredients.takeIf { it.isNotBlank() }?.let {Triple("Allergène (ingrédients): $it" , Color.Red,false)  },
+            state.traces_from_ingredients.takeIf { it.isNotBlank() }?.let { Triple("Trace Allergène: $it" , Color.Red ,false) },
+            state.ingredients_text_fr.takeIf { it.isNotBlank() }?.let { Triple("Ingrédients: $it", Color.White,true)  },
+            state.preparation_fr.takeIf{it.isNotBlank()}?.let{Triple("Préparation : $it" , Color.White,true) },
+            state.conservation_conditions_fr.takeIf{it.isNotBlank()}.let{Triple("Conservation : $it" , Color.White,true)}
         )
 
         items(data.size) { index ->
-            val (text, color) = data[index]
-            Text(text = text, color = color, modifier = Modifier.fillMaxWidth())
+            val (text, color,expanded) = data[index]
+            if (expanded){
+                ScannerProductAnimateScreen { expanded->
+                    Row (modifier=Modifier.fillMaxWidth()){
+                        Text(text=text,
+                            maxLines = if (expanded) Int.MAX_VALUE else 1,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.padding(8.dp)
+                                .weight(1f),
+                            color = Color.White
+                        )
+                        if (!expanded){
+                            Icon(
+                                imageVector = Icons.Filled.ArrowDropDown,
+                                contentDescription = "arrowDropDown",
+                                modifier=Modifier.size(25.dp)
+                                    . align(alignment = Alignment.CenterVertically)
+
+                            )
+                        }else{
+                            Icon(
+                                imageVector = Icons.Filled.ArrowDropUp,
+                                contentDescription = "arrowDropUp",
+                                modifier=Modifier.size(25.dp)
+                                    .align(alignment = Alignment.Bottom)
+
+                            )
+                        }
+
+
+                    }
+                }
+
+            }else{
+                Text(text = text, color = color, modifier = Modifier.fillMaxWidth())
+            }
+
+
+
         }
 
         item {
@@ -143,7 +244,10 @@ fun ScannerProductScreen(
         item {
             LazyVerticalGrid(
                 columns = GridCells.Fixed(4),
-                modifier = Modifier.height(200.dp)
+                modifier = Modifier.height(300.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+
             ) {
                 val nut = listOf(
                     "Glucides : \n${state.nutriments?.carbohydrates_100g} g",
@@ -159,7 +263,10 @@ fun ScannerProductScreen(
                 )
 
                 items(nut) { nutr ->
-                    Card { Text(nutr) }
+                    OutlinedCard(modifier=Modifier.height(80.dp).aspectRatio(1f),colors = CardDefaults.cardColors(
+                        containerColor = Color(0xFFD4D2D2)),border = BorderStroke(1.dp, Color.Black),) {Text(nutr,textAlign = TextAlign.Center,modifier=Modifier.fillMaxSize()) }
+
+
                 }
             }
         }
